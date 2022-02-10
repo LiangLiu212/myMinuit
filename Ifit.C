@@ -80,6 +80,7 @@ void Ifit()
    y[4]=1.44016;
 
    myMinuit *gMinuit = new myMinuit(5);  //initialize TMinuit with a maximum of 5 params
+  // gMinuit->setRandomSeed(123);
    gMinuit->SetFCN(fcn);
 
    Double_t arglist[10];
@@ -100,6 +101,7 @@ void Ifit()
    arglist[0] = 500;
    arglist[1] = 1.;
    gMinuit->mnexcm("MIGRAD", arglist ,2,ierflg);
+   gMinuit->mnexcm("MINOS", arglist ,2,ierflg);
 
 // Print results
    Double_t amin,edm,errdef;
