@@ -80,7 +80,7 @@ void Ifit()
    y[4]=1.44016;
 
    myMinuit *gMinuit = new myMinuit(5);  //initialize TMinuit with a maximum of 5 params
-  // gMinuit->setRandomSeed(123);
+   gMinuit->setRandomSeed(123);
    gMinuit->SetFCN(fcn);
 
    Double_t arglist[10];

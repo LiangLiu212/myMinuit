@@ -20,7 +20,13 @@ ${obj2}: ${DictCxx}
 ${LIBO}:${obj1}  ${obj2}
 	${CC} -shared -O2 -m64 $^ -o $@
 
-.PHONY:all clean
+.PHONY:all clean install
 
 clean:
 	-rm -f *o *so ${DictCxx} *pcm
+
+
+install: 
+	cp  ${LIBO} ../lib
+	cp  *pcm ../lib
+	cp  ${HFile} ../include

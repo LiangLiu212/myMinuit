@@ -47,7 +47,7 @@ void myMinuit::setRandomSeed(const int rdmSeed){
 	rdm->SetSeed(rdmSeed);
 	for(int i =0; i < fMaxpar; i++){
 		m_rdmVal.push_back(rdm->Rndm());
-		cout << "m_rdmVal = " << m_rdmVal[i] << endl;
+	//	cout << "m_rdmVal = " << m_rdmVal[i] << endl;
 	}
 }
 
@@ -404,8 +404,8 @@ L16:
       }
       if (cx2 == "PLEASE GET X..")  cx2.Form("%14.5e",x2);
       if (cx3 == "PLEASE GET X..")  cx3.Form("%14.5e",x3);
-      Printf("OK 1 %4d %-11s%14.5e + %e%14.5e%-14s%-14s",i
-                   ,(const char*)cnambf,fU[i-1], (m_rdmVal[i-1] *2.0 - 1.0) , x1
+      Printf("OK 1 %4d %-11s%14.5e %14.5e%-14s%-14s",i
+                   ,(const char*)cnambf,fU[i-1] + (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
                    ,(const char*)cx2,(const char*)cx3);
 
 //              check if parameter is at limit
@@ -434,5 +434,133 @@ L55:
    }
    return;
 }
+
+
+////////////////////////////////////////////////////////////////////////////////
+/// Provides the user with information concerning the current status
+///
+/// of parameter number IUEXT. Namely, it returns:
+///      -  CHNAM: the name of the parameter
+///      -  VAL: the current (external) value of the parameter
+///      -  ERR: the current estimate of the parameter uncertainty
+///      -  XLOLIM: the lower bound (or zero if no limits)
+///      -  XUPLIM: the upper bound (or zero if no limits)
+///      -  IUINT: the internal parameter number (or zero if not variable,
+///            or negative if undefined).
+///
+///  Note also:  If IUEXT is negative, then it is -internal parameter
+///           number, and IUINT is returned as the EXTERNAL number.
+///     Except for IUINT, this is exactly the inverse of MNPARM
+///     User-called
+ 
+
+
+void myMinuit::mnpout(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const
+{
+	if(flag_rdm){
+		mnpout2(iuext1, chnam, val, err, xlolim, xuplim, iuint);
+	}
+	else {
+		mnpout1(iuext1, chnam, val, err, xlolim, xuplim, iuint);
+	}
+}
+
+
+
+
+void myMinuit::mnpout1(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const
+{
+   /* Local variables */
+   Int_t iint, iext, nvl;
+ 
+   Int_t iuext = iuext1 + 1;
+   xlolim = 0;
+   xuplim = 0;
+   err    = 0;
+   if (iuext == 0) goto L100;
+   if (iuext < 0) {
+//                  internal parameter number specified
+      iint  = -(iuext);
+      if (iint > fNpar) goto L100;
+      iext  = fNexofi[iint-1];
+      iuint = iext;
+   } else {
+//                   external parameter number specified
+      iext = iuext;
+      if (iext > fNu) goto L100;
+      iint  = fNiofex[iext-1];
+      iuint = iint;
+   }
+//                    in both cases
+   nvl = fNvarl[iext-1];
+   if (nvl < 0) goto L100;
+   chnam = fCpnam[iext-1];
+   val   = fU[iext-1];
+   if (iint > 0) err = fWerr[iint-1];
+   if (nvl == 4) {
+      xlolim = fAlim[iext-1];
+      xuplim = fBlim[iext-1];
+   }
+   return;
+//               parameter is undefined
+L100:
+   iuint = -1;
+   chnam = "undefined";
+   val = 0;
+}
+ 
+
+void myMinuit::mnpout2(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const
+{
+   /* Local variables */
+   Int_t iint, iext, nvl;
+ 
+   Int_t iuext = iuext1 + 1;
+   xlolim = 0;
+   xuplim = 0;
+   err    = 0;
+   if (iuext == 0) goto L100;
+   if (iuext < 0) {
+//                  internal parameter number specified
+      iint  = -(iuext);
+      if (iint > fNpar) goto L100;
+      iext  = fNexofi[iint-1];
+      iuint = iext;
+   } else {
+//                   external parameter number specified
+      iext = iuext;
+      if (iext > fNu) goto L100;
+      iint  = fNiofex[iext-1];
+      iuint = iint;
+   }
+//                    in both cases
+   nvl = fNvarl[iext-1];
+   if (nvl < 0) goto L100;
+   chnam = fCpnam[iext-1];
+   val   = fU[iext-1] + (m_rdmVal[iext-1] *2.0 - 1.0) * m_Offset;
+   if (iint > 0) err = fWerr[iint-1];
+   if (nvl == 4) {
+      xlolim = fAlim[iext-1];
+      xuplim = fBlim[iext-1];
+   }
+   return;
+//               parameter is undefined
+L100:
+   iuint = -1;
+   chnam = "undefined";
+   val = 0;
+}
+ 
+
+
+
+
+
+
+
+
+
+
+
 
 

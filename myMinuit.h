@@ -29,15 +29,27 @@ class myMinuit : public TMinuit {
 
 	public:
 		myMinuit() : TMinuit(){
+				m_Offset = 10.0;
 		}
 		myMinuit(Int_t maxpar): TMinuit(maxpar){
+				m_Offset = 10.0;
 		}
 		virtual void   mnprin(Int_t inkode, Double_t fval);
 		virtual void   mnprin1(Int_t inkode, Double_t fval);
 		virtual void   mnprin2(Int_t inkode, Double_t fval);
+		
+		virtual void   mnpout(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const;
+		virtual void   mnpout1(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const;
+		virtual void   mnpout2(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const;
+
+
 		virtual void   setRandomSeed(const int rdmSeed);
+		virtual void   setOffsetRange(const double offset = 10.0){
+				m_Offset = offset;
+		}
 	private:
 		int m_rdmSeed;
+		double m_Offset;
 		vector<double> m_rdmVal;
 		bool flag_rdm = false;
 
