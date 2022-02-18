@@ -30,9 +30,11 @@ class myMinuit : public TMinuit {
 	public:
 		myMinuit() : TMinuit(){
 				m_Offset = 10.0;
+				flag_rdm = false;
 		}
 		myMinuit(Int_t maxpar): TMinuit(maxpar){
 				m_Offset = 10.0;
+				flag_rdm = false;
 		}
 		virtual void   mnprin(Int_t inkode, Double_t fval);
 		virtual void   mnprin1(Int_t inkode, Double_t fval);
