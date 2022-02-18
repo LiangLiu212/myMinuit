@@ -19,9 +19,6 @@
 
 #include "myMinuit.h"
 
-
-ClassImp(myMinuit);
-
 ////////////////////////////////////////////////////////////////////////////////
 /// Prints the values of the parameters at the time of the call
 ///

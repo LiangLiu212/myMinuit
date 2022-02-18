@@ -51,9 +51,7 @@ class myMinuit : public TMinuit {
 		int m_rdmSeed;
 		double m_Offset;
 		vector<double> m_rdmVal;
-		bool flag_rdm = false;
+		bool flag_rdm;
 
-	public:
-		ClassDef(myMinuit, 1)
 };
 #endif

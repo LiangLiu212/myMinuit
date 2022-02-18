@@ -24,7 +24,6 @@
 
 #include "TMinuit.h"
 #include "myMinuit.h"
-R__LOAD_LIBRARY(libmyMinuit.so);
 Float_t z[5],x[5],y[5],errorz[5];
 
 //______________________________________________________________________________
@@ -51,7 +50,7 @@ void fcn(Int_t &npar, Double_t *gin, Double_t &f, Double_t *par, Int_t iflag)
 }
 
 //______________________________________________________________________________
-void Ifit()
+int main()
 {
 // The z values
    z[0]=1;
