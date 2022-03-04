@@ -84,9 +84,9 @@ void myMinuit::blindParameter(const int n){
 		cout << "myMinuit: please set the random seed using setRandomSeed()!" << endl;
 		exit(0);
 	}
-	if(n > fMaxpar){
+	if(n > fMaxpar || n < 0){
 		cout << "myMinuit: wrong parameter index!" << endl;
-		return;
+		exit(0);
 	}
 	m_rdmVal.at(n) = m_tmprdmVal[n];
 }
@@ -96,7 +96,7 @@ void myMinuit::unblindParameter(const int n){
 		cout << "myMinuit: please set the random seed using setRandomSeed()!" << endl;
 		exit(0);
 	}
-	if(n > fMaxpar){
+	if(n  > fMaxpar || n < 0){
 		cout << "myMinuit: wrong parameter index!" << endl;
 		exit(0);
 	}
