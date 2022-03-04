@@ -1,17 +1,24 @@
-OBJ=myMinuit
+TARGET=main
 CC=g++
-ROOTCFLAGS=`root-config --cflags` -Wall -fPIC  `root-config --libs` -lMinuit -lmyMinuit  -I /Users/liang/Documents/root/myMinuit -L /Users/liang/Documents/root/myMinuit/
+OBJS=Ifit.o
+ROOTCFLAGS=`root-config --cflags` -Wall -fPIC  `root-config --libs` -lMinuit -lmyMinuit \
+	   -I /home/liang/data/software/myMinuit \
+	   -L /home/liang/data/software/myMinuit
+CFLAGS ="-march=broadwell -O3 -pipe"
 
-obj1=${OBJ}.o
-HFile=${OBJ}.h
+.SUFFIXES   : .o .C
+.SUFFIXES   : .o .cc
+.SUFFIXES   : .o .cxx
 
 
-all: main 
-main: Ifit.C 
-	${CC} -o $@  $^ ${ROOTCFLAGS}
+.C.o : 
+	${CC} $(FFLAGS) ${ROOTCFLAGS} -c $<
+
+all: $(OBJS)
+	${CC} ${ROOTCFLAGS} $(CFLAGS)  -o $(TARGET) $(OBJS)
 
 .PHONY:all clean 
 
 clean:
-	-rm -f *o main
+	-rm -f  main
 

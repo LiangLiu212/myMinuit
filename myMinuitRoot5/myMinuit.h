@@ -30,11 +30,9 @@ class myMinuit : public TMinuit {
 	public:
 		myMinuit() : TMinuit(){
 				m_Offset = 10.0;
-				flag_rdm = false;
 		}
 		myMinuit(Int_t maxpar): TMinuit(maxpar){
 				m_Offset = 10.0;
-				flag_rdm = false;
 		}
 		virtual void   mnprin(Int_t inkode, Double_t fval);
 		virtual void   mnprin1(Int_t inkode, Double_t fval);
@@ -44,7 +42,11 @@ class myMinuit : public TMinuit {
 		virtual void   mnpout1(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const;
 		virtual void   mnpout2(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const;
 
-
+		// Blind analysis
+		virtual void   blindParameter(const int n);
+		virtual void   unblindParameter(const int n);
+		virtual void   blindParameter(bool okblind = true);
+		virtual void   unblindParameter(bool okunblind = true);
 		virtual void   setRandomSeed(const int rdmSeed);
 		virtual void   setOffsetRange(const double offset = 10.0){
 				m_Offset = offset;
@@ -53,7 +55,10 @@ class myMinuit : public TMinuit {
 		int m_rdmSeed;
 		double m_Offset;
 		vector<double> m_rdmVal;
-		bool flag_rdm;
+		vector<double> m_tmprdmVal;
+		bool flag_rdm = false;
+		bool fblind;
+		bool funblind;
 
 };
 #endif

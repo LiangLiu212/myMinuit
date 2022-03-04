@@ -39,15 +39,80 @@ ClassImp(myMinuit);
 ///    when INKODE=5, MNPRIN chooses IKODE=1,2, or 3, according to fISW[1]
 
 
+void myMinuit::blindParameter(bool okblind){
+	if(!flag_rdm){
+		cout << "myMinuit: please set the random seed using setRandomSeed()!" << endl;
+		exit(0);
+	}
+	fblind = okblind;
+	funblind = !okblind;
+	m_rdmVal.clear();
+	if(okblind){
+		for(int i =0; i < fMaxpar; i++){
+			m_rdmVal.push_back(m_tmprdmVal[i]);
+		}
+	}
+	else{
+		for(int i =0; i < fMaxpar; i++){
+			m_rdmVal.push_back(0.5);
+		}
+	}
+}
+
+void myMinuit::unblindParameter(bool okunblind){
+	if(!flag_rdm){
+		cout << "myMinuit: please set the random seed using setRandomSeed()!" << endl;
+		exit(0);
+	}
+	funblind = okunblind;
+	fblind = !okunblind;
+	m_rdmVal.clear();
+	if(okunblind){
+		for(int i =0; i < fMaxpar; i++){
+			m_rdmVal.push_back(0.5);
+		}
+	}
+	else{
+		for(int i =0; i < fMaxpar; i++){
+			m_rdmVal.push_back(m_tmprdmVal[i]);
+		}
+	}
+}
+
+void myMinuit::blindParameter(const int n){
+	if(!flag_rdm){
+		cout << "myMinuit: please set the random seed using setRandomSeed()!" << endl;
+		exit(0);
+	}
+	if(n > fMaxpar){
+		cout << "myMinuit: wrong parameter index!" << endl;
+		return;
+	}
+	m_rdmVal.at(n) = m_tmprdmVal[n];
+}
+
+void myMinuit::unblindParameter(const int n){
+	if(!flag_rdm){
+		cout << "myMinuit: please set the random seed using setRandomSeed()!" << endl;
+		exit(0);
+	}
+	if(n > fMaxpar){
+		cout << "myMinuit: wrong parameter index!" << endl;
+		exit(0);
+	}
+	m_rdmVal.at(n) = 0.5;
+}
+
+
 
 void myMinuit::setRandomSeed(const int rdmSeed){
 	flag_rdm = true;
-	m_rdmVal.clear();
+	m_tmprdmVal.clear();
 	TRandom *rdm = new TRandom();
 	rdm->SetSeed(rdmSeed);
 	for(int i =0; i < fMaxpar; i++){
-		m_rdmVal.push_back(rdm->Rndm());
-	//	cout << "m_rdmVal = " << m_rdmVal[i] << endl;
+		m_tmprdmVal.push_back(rdm->Rndm());
+		m_rdmVal.push_back(m_tmprdmVal[i]);
 	}
 }
 
@@ -361,7 +426,7 @@ L16:
    Printf("  EXT PARAMETER              %-14s%-14s%-14s",(const char*)colhdu[0]
                                                     ,(const char*)colhdu[1]
                                                     ,(const char*)colhdu[2]);
-   Printf("  NO.   NAME      VALUE + OFFSET      %-14s%-14s%-14s",(const char*)colhdl[0]
+   Printf("STATUS  NO.   NAME      VALUE + OFFSET      %-14s%-14s%-14s",(const char*)colhdl[0]
                                                     ,(const char*)colhdl[1]
                                                     ,(const char*)colhdl[2]);
 //                                             loop over parameters
@@ -404,9 +469,16 @@ L16:
       }
       if (cx2 == "PLEASE GET X..")  cx2.Form("%14.5e",x2);
       if (cx3 == "PLEASE GET X..")  cx3.Form("%14.5e",x3);
-      Printf("OK 1 %4d %-11s%14.5e %14.5e%-14s%-14s",i
+      if(m_rdmVal[i-1] == 0.5){
+      Printf("unbli %4d %-11s%14.5e %14.5e%-14s%-14s",i
                    ,(const char*)cnambf,fU[i-1] + (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
                    ,(const char*)cx2,(const char*)cx3);
+      }
+      else{
+      Printf("blind %4d %-11s%14.5e %14.5e%-14s%-14s",i
+                   ,(const char*)cnambf,fU[i-1] + (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
+                   ,(const char*)cx2,(const char*)cx3);
+      }
 
 //              check if parameter is at limit
       if (fNvarl[i-1] <= 1 || ikode == 3) continue;
