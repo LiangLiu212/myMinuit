@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  myMinuit.h
+ *       Filename:  blindMinuit.h
  *
  *    Description:  
  *
@@ -25,13 +25,13 @@
 #include <iostream>
 using namespace std;
 
-class myMinuit : public TMinuit {
+class blindMinuit : public TMinuit {
 
 	public:
-		myMinuit() : TMinuit(){
+		blindMinuit() : TMinuit(){
 				m_Offset = 10.0;
 		}
-		myMinuit(Int_t maxpar): TMinuit(maxpar){
+		blindMinuit(Int_t maxpar): TMinuit(maxpar){
 				m_Offset = 10.0;
 		}
 		virtual void   mnprin(Int_t inkode, Double_t fval);
@@ -61,6 +61,6 @@ class myMinuit : public TMinuit {
 		bool funblind;
 
 	public:
-		ClassDef(myMinuit, 1)
+		ClassDef(blindMinuit, 1)
 };
 #endif

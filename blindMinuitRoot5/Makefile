@@ -1,4 +1,4 @@
-OBJ=myMinuit
+OBJ=blindMinuit
 CC=g++
 ROOTCFLAGS=`root-config --cflags` -Wall -fPIC  `root-config --libs` -lMinuit
 

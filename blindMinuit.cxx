@@ -17,9 +17,10 @@
  */
 
 
-#include "myMinuit.h"
+#include "blindMinuit.h"
 
 
+ClassImp(blindMinuit);
 
 ////////////////////////////////////////////////////////////////////////////////
 /// Prints the values of the parameters at the time of the call
@@ -38,9 +39,9 @@
 ///    when INKODE=5, MNPRIN chooses IKODE=1,2, or 3, according to fISW[1]
 
 
-void myMinuit::blindParameter(bool okblind){
+void blindMinuit::blindParameter(bool okblind){
 	if(!flag_rdm){
-		cout << "myMinuit: please set the random seed using setRandomSeed()!" << endl;
+		cout << "blindMinuit: please set the random seed using setRandomSeed()!" << endl;
 		exit(0);
 	}
 	fblind = okblind;
@@ -58,9 +59,9 @@ void myMinuit::blindParameter(bool okblind){
 	}
 }
 
-void myMinuit::unblindParameter(bool okunblind){
+void blindMinuit::unblindParameter(bool okunblind){
 	if(!flag_rdm){
-		cout << "myMinuit: please set the random seed using setRandomSeed()!" << endl;
+		cout << "blindMinuit: please set the random seed using setRandomSeed()!" << endl;
 		exit(0);
 	}
 	funblind = okunblind;
@@ -78,25 +79,25 @@ void myMinuit::unblindParameter(bool okunblind){
 	}
 }
 
-void myMinuit::blindParameter(const int n){
+void blindMinuit::blindParameter(const int n){
 	if(!flag_rdm){
-		cout << "myMinuit: please set the random seed using setRandomSeed()!" << endl;
+		cout << "blindMinuit: please set the random seed using setRandomSeed()!" << endl;
 		exit(0);
 	}
-	if(n > fMaxpar){
-		cout << "myMinuit: wrong parameter index!" << endl;
-		return;
+	if(n > fMaxpar || n < 0){
+		cout << "blindMinuit: wrong parameter index!" << endl;
+		exit(0);
 	}
 	m_rdmVal.at(n) = m_tmprdmVal[n];
 }
 
-void myMinuit::unblindParameter(const int n){
+void blindMinuit::unblindParameter(const int n){
 	if(!flag_rdm){
-		cout << "myMinuit: please set the random seed using setRandomSeed()!" << endl;
+		cout << "blindMinuit: please set the random seed using setRandomSeed()!" << endl;
 		exit(0);
 	}
-	if(n > fMaxpar){
-		cout << "myMinuit: wrong parameter index!" << endl;
+	if(n  > fMaxpar || n < 0){
+		cout << "blindMinuit: wrong parameter index!" << endl;
 		exit(0);
 	}
 	m_rdmVal.at(n) = 0.5;
@@ -104,7 +105,7 @@ void myMinuit::unblindParameter(const int n){
 
 
 
-void myMinuit::setRandomSeed(const int rdmSeed){
+void blindMinuit::setRandomSeed(const int rdmSeed){
 	flag_rdm = true;
 	m_tmprdmVal.clear();
 	TRandom *rdm = new TRandom();
@@ -115,7 +116,7 @@ void myMinuit::setRandomSeed(const int rdmSeed){
 	}
 }
 
-void myMinuit::mnprin(Int_t inkode, Double_t fval){
+void blindMinuit::mnprin(Int_t inkode, Double_t fval){
 	if(flag_rdm){
 		mnprin2(inkode, fval);
 	}
@@ -126,7 +127,7 @@ void myMinuit::mnprin(Int_t inkode, Double_t fval){
 
 
 
-void myMinuit::mnprin1(Int_t inkode, Double_t fval)
+void blindMinuit::mnprin1(Int_t inkode, Double_t fval)
 {
    /* Initialized data */
 
@@ -314,7 +315,7 @@ L55:
 
 
 
-void myMinuit::mnprin2(Int_t inkode, Double_t fval)
+void blindMinuit::mnprin2(Int_t inkode, Double_t fval)
 {
    /* Initialized data */
 
@@ -472,6 +473,9 @@ L16:
       Printf("unbli %4d %-11s%14.5e %14.5e%-14s%-14s",i
                    ,(const char*)cnambf,fU[i-1] + (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
                    ,(const char*)cx2,(const char*)cx3);
+ //     Printf("unbli %4d %-11s%14.5e + %14.5e %14.5e%-14s%-14s",i
+   //                ,(const char*)cnambf,fU[i-1] , (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
+     //              ,(const char*)cx2,(const char*)cx3);
       }
       else{
       Printf("blind %4d %-11s%14.5e %14.5e%-14s%-14s",i
@@ -526,7 +530,7 @@ L55:
  
 
 
-void myMinuit::mnpout(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const
+void blindMinuit::mnpout(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const
 {
 	if(flag_rdm){
 		mnpout2(iuext1, chnam, val, err, xlolim, xuplim, iuint);
@@ -539,7 +543,7 @@ void myMinuit::mnpout(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err
 
 
 
-void myMinuit::mnpout1(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const
+void blindMinuit::mnpout1(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const
 {
    /* Local variables */
    Int_t iint, iext, nvl;
@@ -581,7 +585,7 @@ L100:
 }
  
 
-void myMinuit::mnpout2(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const
+void blindMinuit::mnpout2(Int_t iuext1, TString &chnam, Double_t &val, Double_t &err, Double_t &xlolim, Double_t &xuplim, Int_t &iuint) const
 {
    /* Local variables */
    Int_t iint, iext, nvl;

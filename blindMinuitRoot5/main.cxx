@@ -23,7 +23,7 @@
 /// \author Rene Brun
 
 #include "TMinuit.h"
-#include "myMinuit.h"
+#include "blindMinuit.h"
 Float_t z[5],x[5],y[5],errorz[5];
 
 //______________________________________________________________________________
@@ -78,7 +78,7 @@ int main()
    y[3]=1.128654;
    y[4]=1.44016;
 
-   myMinuit *gMinuit = new myMinuit(5);  //initialize TMinuit with a maximum of 5 params
+   blindMinuit *gMinuit = new blindMinuit(5);  //initialize TMinuit with a maximum of 5 params
    gMinuit->setRandomSeed(123);
    gMinuit->SetFCN(fcn);
 

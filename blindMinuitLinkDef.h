@@ -1,7 +1,7 @@
 /*
  * =====================================================================================
  *
- *       Filename:  myMinuitLinkDef.h
+ *       Filename:  blindMinuitLinkDef.h
  *
  *    Description:  
  *
@@ -16,5 +16,5 @@
  * =====================================================================================
  */
 #ifdef __CLING__
-#pragma link C++ class myMinuit;
+#pragma link C++ class blindMinuit;
 #endif

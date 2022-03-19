@@ -1,4 +1,4 @@
-OBJ=myMinuit
+OBJ=blindMinuit
 CC=c++
 ROOTCFLAGS=`root-config --cflags` -Wall -fPIC 
 

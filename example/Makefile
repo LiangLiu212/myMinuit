@@ -1,7 +1,7 @@
 TARGET=main
 CC=g++
 OBJS=Ifit.o
-ROOTCFLAGS=`root-config --cflags` -Wall -fPIC  `root-config --libs` -lMinuit -lmyMinuit \
+ROOTCFLAGS=`root-config --cflags` -Wall -fPIC  `root-config --libs` -lMinuit -lblindMinuit \
 	   -I /home/liang/data/software/myMinuit \
 	   -L /home/liang/data/software/myMinuit
 CFLAGS ="-march=broadwell -O3 -pipe"
