@@ -10,9 +10,9 @@ A [Blind analysis](https://www.slac.stanford.edu/econf/C030908/papers/TUIT001.pd
 
 
 ## Usage
-* Build a shared library ```libmyMinuit.so``` by using ```make```
-* Include the header file 	```myMinuit.h``` and link to the shared library ```libmyMinuit.so```
+* Build a shared library ```libblindMinuit.so``` by using ```make```
+* Include the header file 	```blindMinuit.h``` and link to the shared library ```libblindMinuit.so```
 * Call ```setRandomSeed(const int)```
 
 ## Example 
-```Ifit.C``` is a example to show how to use ```myMinuit```
+```Ifit.C``` is a example to show how to use ```blindMinuit```
