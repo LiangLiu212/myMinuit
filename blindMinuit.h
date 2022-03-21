@@ -55,6 +55,8 @@ class blindMinuit : public TMinuit {
 		int m_rdmSeed;
 		double m_Offset;
 		vector<double> m_rdmVal;
+		vector<double> m_signVal;
+		vector<double> m_tmpsignVal;
 		vector<double> m_tmprdmVal;
 		bool flag_rdm = false;
 		bool fblind;
