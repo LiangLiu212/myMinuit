@@ -80,6 +80,10 @@ int main()
 
    blindMinuit *gMinuit = new blindMinuit(5);  //initialize TMinuit with a maximum of 5 params
    gMinuit->setRandomSeed(123);
+   gMinuit->blindParameter(false);
+   gMinuit->blindParameter(0);
+   gMinuit->blindParameter(2);
+
    gMinuit->SetFCN(fcn);
 
    Double_t arglist[10];

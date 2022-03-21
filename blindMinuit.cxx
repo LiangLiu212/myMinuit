@@ -47,14 +47,17 @@ void blindMinuit::blindParameter(bool okblind){
 	fblind = okblind;
 	funblind = !okblind;
 	m_rdmVal.clear();
+	m_signVal.clear();
 	if(okblind){
 		for(int i =0; i < fMaxpar; i++){
 			m_rdmVal.push_back(m_tmprdmVal[i]);
+			m_signVal.push_back(m_tmpsignVal[i]);
 		}
 	}
 	else{
 		for(int i =0; i < fMaxpar; i++){
 			m_rdmVal.push_back(0.5);
+			m_signVal.push_back(1);
 		}
 	}
 }
@@ -67,14 +70,17 @@ void blindMinuit::unblindParameter(bool okunblind){
 	funblind = okunblind;
 	fblind = !okunblind;
 	m_rdmVal.clear();
+	m_signVal.clear();
 	if(okunblind){
 		for(int i =0; i < fMaxpar; i++){
 			m_rdmVal.push_back(0.5);
+			m_signVal.push_back(1);
 		}
 	}
 	else{
 		for(int i =0; i < fMaxpar; i++){
 			m_rdmVal.push_back(m_tmprdmVal[i]);
+			m_signVal.push_back(m_tmpsignVal[i]);
 		}
 	}
 }
@@ -89,6 +95,7 @@ void blindMinuit::blindParameter(const int n){
 		exit(0);
 	}
 	m_rdmVal.at(n) = m_tmprdmVal[n];
+	m_signVal.at(n) = m_tmpsignVal[n];
 }
 
 void blindMinuit::unblindParameter(const int n){
@@ -101,6 +108,7 @@ void blindMinuit::unblindParameter(const int n){
 		exit(0);
 	}
 	m_rdmVal.at(n) = 0.5;
+	m_signVal.at(n) = 1;
 }
 
 
@@ -108,11 +116,20 @@ void blindMinuit::unblindParameter(const int n){
 void blindMinuit::setRandomSeed(const int rdmSeed){
 	flag_rdm = true;
 	m_tmprdmVal.clear();
+	m_tmpsignVal.clear();
 	TRandom *rdm = new TRandom();
 	rdm->SetSeed(rdmSeed);
 	for(int i =0; i < fMaxpar; i++){
 		m_tmprdmVal.push_back(rdm->Rndm());
 		m_rdmVal.push_back(m_tmprdmVal[i]);
+	}
+	for(int i =0; i < fMaxpar; i++){
+		if(rdm->Rndm() > 0.5){
+			m_tmpsignVal.push_back(1);
+		}
+		else {
+			m_tmpsignVal.push_back(-1);
+		}
 	}
 }
 
@@ -471,16 +488,19 @@ L16:
       if (cx3 == "PLEASE GET X..")  cx3.Form("%14.5e",x3);
       if(m_rdmVal[i-1] == 0.5){
       Printf("unbli %4d %-11s%14.5e %14.5e%-14s%-14s",i
-                   ,(const char*)cnambf,fU[i-1] + (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
+                   ,(const char*)cnambf,fU[i-1]*m_signVal[i-1] + (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
                    ,(const char*)cx2,(const char*)cx3);
- //     Printf("unbli %4d %-11s%14.5e + %14.5e %14.5e%-14s%-14s",i
-   //                ,(const char*)cnambf,fU[i-1] , (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
-     //              ,(const char*)cx2,(const char*)cx3);
+   //   Printf("unbli %4d %-11s%14.5e + %14.5e %14.5e%-14s%-14s",i
+     //             ,(const char*)cnambf,fU[i-1] , (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
+        //           ,(const char*)cx2,(const char*)cx3);
       }
       else{
       Printf("blind %4d %-11s%14.5e %14.5e%-14s%-14s",i
-                   ,(const char*)cnambf,fU[i-1] + (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
+                   ,(const char*)cnambf,fU[i-1]*m_signVal[i-1] + (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
                    ,(const char*)cx2,(const char*)cx3);
+    //  Printf("blind %4d %-11s%14.5e + %14.5e %14.5e%-14s%-14s",i
+      //             ,(const char*)cnambf,fU[i-1] , (m_rdmVal[i-1] *2.0 - 1.0) * m_Offset , x1
+        //           ,(const char*)cx2,(const char*)cx3);
       }
 
 //              check if parameter is at limit
@@ -612,7 +632,7 @@ void blindMinuit::mnpout2(Int_t iuext1, TString &chnam, Double_t &val, Double_t 
    nvl = fNvarl[iext-1];
    if (nvl < 0) goto L100;
    chnam = fCpnam[iext-1];
-   val   = fU[iext-1] + (m_rdmVal[iext-1] *2.0 - 1.0) * m_Offset;
+   val   = fU[iext-1]*m_signVal[iext-1] + (m_rdmVal[iext-1] *2.0 - 1.0) * m_Offset;
    if (iint > 0) err = fWerr[iint-1];
    if (nvl == 4) {
       xlolim = fAlim[iext-1];
